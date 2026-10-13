@@ -41,6 +41,12 @@ body {
 #city .fog { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(180deg, rgba(20,24,32,0) 55%, rgba(20,24,32,.55) 100%); }
 #city .rain { position: absolute; left: -10%; top: -100%; width: 120%; height: 200%; background-repeat: repeat; opacity: .7;
   will-change: transform; animation: fall 1.6s linear infinite; }
+.still #city .lay, .still #city .rain { animation: none; }
+.still #city .rain { display: none; }
+.still #city .glow { animation: breathe 6s ease-in-out infinite alternate; }
+@keyframes breathe { from { opacity: .55; } to { opacity: 1; } }
+.still #city .lay:nth-child(2) { transform: translate3d(-12%,0,0); }
+.still #city .lay:nth-child(4) { transform: translate3d(-27%,0,0); }
 @keyframes pan { to { transform: translate3d(-50%,0,0); } }
 @keyframes fall { to { transform: translate3d(-60px, 50%, 0); } }
 #bgimg { position: fixed; top: -3%; right: -3%; bottom: -3%; left: -3%; background-size: cover; background-position: center; opacity: 0;
@@ -224,7 +230,8 @@ var CONFIG = {
   music: [                      // fichiers à mettre à côté de index.html (mp3 ou ogg, libres de droits)
     { src: "world-hold-on-lyric-video.mp3", title: "World, Hold On" },
   ],
-  musicVolume: 0.45             // volume de départ (0 à 1)
+  musicVolume: 0.45,            // volume de départ (0 à 1)
+  animation: false              // true = ville qui défile + pluie (peut saccader en jeu), false = fond fixe
 };
 /* ========================================================= */
 
@@ -284,6 +291,7 @@ function buildCity() {
   var rain = document.createElement("div"); rain.className = "rain"; rain.style.backgroundImage = "url(" + rainTexture() + ")";
   city.appendChild(rain);
 }
+if (!CONFIG.animation) document.documentElement.className += " still";
 buildCity();
 var rt; addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(buildCity, 300); });
 function resize() { buildCity(); }
